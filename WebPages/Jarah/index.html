@@ -1,0 +1,111 @@
+<!-- index.html (نسخه کامل و اصلاح شده) -->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>طراحی شناسنامه انگشتر</title>
+  <script src="https://cdn.jsdelivr.net/npm/piexifjs@1.0.4/piexif.min.js"></script>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+  <div id="loadingOverlay">
+    <div class="spinner"></div>
+    <p>در حال پردازش...</p>
+  </div>
+
+  <div id="previewContainer" class="preview-container">
+    <div class="canvas-wrapper">
+      <canvas id="canvas"></canvas>
+    </div>
+  </div>
+
+  <button id="togglePreviewBtn" class="toggle-preview-btn">مخفی کردن</button>
+
+  <div class="page-container">
+    <div class="controls-accordion">
+      <!-- مرحله ۱: تصاویر -->
+      <details class="accordion-item" open>
+        <summary class="accordion-header">مرحله ۱: انتخاب تصاویر</summary>
+        <div class="accordion-body">
+          <div class="form-group">
+            <label for="circleImageInput">تصویر انگشتر</label>
+            <input type="file" id="circleImageInput" accept="image/*" data-x="110" data-y="162" data-width="330" data-height="330" data-Roundness="75"/>
+          </div>
+          <div class="form-group">
+            <label for="ringImageInput">تصویر QR Code (اختیاری)</label>
+            <input type="text" id="ringImageInput" placeholder="آدرس QR Code به صورت خودکار ساخته می‌شود" data-x="255" data-y="500" data-width="130" data-height="130" data-mode="darken" />
+          </div>
+        </div>
+      </details>
+
+      <!-- مرحله ۲: تنظیمات تصویر -->
+      <details class="accordion-item">
+        <summary class="accordion-header">مرحله ۲: تنظیمات تصویر</summary>
+        <div class="accordion-body">
+          <div class="slider-group"><label for="slider">میزان بزرگنمایی</label><input type="range" id="slider" min="0.01" max="5" step="0.01" value="1"></div>
+          <div class="slider-group"><label for="sliderx">حرکت افقی (چپ/راست)</label><input type="range" id="sliderx" min="-500" max="500" step="1" value="0"></div>
+          <div class="slider-group"><label for="slidery">حرکت عمودی (بالا/پایین)</label><input type="range" id="slidery" min="-500" max="500" step="1" value="0"></div>
+        </div>
+      </details>
+      
+      <!-- مرحله ۳: اطلاعات عربی (کامل شده) -->
+      <details class="accordion-item">
+        <summary class="accordion-header">مرحله ۳: اطلاعات شناسنامه (عربی)</summary>
+        <div class="accordion-body">
+          <div class="form-group"><input type="text" id="number8" placeholder="اسم دواسه" data-align="right" data-x="980" data-y="463" data-font="ArabicFont" value="اسم دواسه:"></div>
+          <div class="form-group"><input type="text" id="number9" placeholder="نوع صیاغه" data-align="right" data-x="980" data-y="493" data-font="ArabicFont" value="نوع صیاغه: یدوی جراح"></div>
+          <div class="form-group"><input type="text" id="number10" placeholder="عیار الفضه" data-align="right" data-x="980" data-y="522" data-font="ArabicFont" value="عیار الفضه: ۹۲۵"></div>
+          <div class="form-group"><input type="text" id="number11" placeholder="خاتم التوقیع" data-align="right" data-x="980" data-y="552" data-font="ArabicFont" value="خاتم التوقیع:"></div>
+          <div class="form-group"><input type="text" id="number12" placeholder="عدد الماس" data-align="right" data-x="980" data-y="582" data-font="ArabicFont" value="عدد الماس:"></div>
+          <div class="form-group"><input type="text" id="number19" placeholder="الوزن" data-align="right" data-x="980" data-y="612" data-font="ArabicFont" value="الوزن:"></div>
+        </div>
+      </details>
+      
+      <!-- مرحله ۴: اطلاعات انگلیسی (کامل شده) -->
+      <details class="accordion-item">
+        <summary class="accordion-header">مرحله ۴: اطلاعات شناسنامه (انگلیسی)</summary>
+        <div class="accordion-body ltr">
+          <div class="form-group"><input type="text" id="number1" placeholder="Pedal Name" data-align="left" data-x="400" data-y="465" data-font="EnglishFont" value="Pedal Name:"></div>
+          <div class="form-group"><input type="text" id="number2" placeholder="Build Type" data-align="left" data-x="400" data-y="496" data-font="EnglishFont" value="Build Type: Hand made"></div>
+          <div class="form-group"><input type="text" id="number3" placeholder="Percentage of silver" data-align="left" data-x="400" data-y="525" data-font="EnglishFont" value="Percentage of silver: 925"></div>
+          <div class="form-group"><input type="text" id="number4" placeholder="Type of stone" data-align="left" data-x="400" data-y="555" data-font="EnglishFont" value="Type of stone:"></div>
+          <div class="form-group"><input type="text" id="number5" placeholder="Number of Diamond" data-align="left" data-x="400" data-y="585" data-font="EnglishFont" value="Number of Diamond:"></div>
+          <div class="form-group"><input type="text" id="number6" placeholder="Weight" data-align="left" data-x="400" data-y="613" data-font="EnglishFont" value="Weight:"></div>
+        </div>
+      </details>
+      
+      <!-- مرحله ۵: کد نهایی -->
+      <details class="accordion-item">
+        <summary class="accordion-header">مرحله ۵: کد نهایی و دانلود</summary>
+        <div class="accordion-body">
+            <div class="form-group">
+                <label for="number13">کد اصلی محصول</label>
+                <input type="text" id="number13" placeholder="مثال: M.J-123" data-align="center" data-x="470" data-y="395" data-font="EnglishFont" data-fontsize="30" value="M.J">
+            </div>
+            <div class="final-actions">
+                <button id="submitBtn" class="btn btn-primary">دانلود و ارسال</button>
+                <button id="downloadOnlyBtn" class="btn btn-secondary">دانلود فقط طرح</button>
+            </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- بخش نمایش توضیحات ترکیبی -->
+    <section class="card description-preview" hidden>
+        <h2>پیش‌نمایش توضیحات</h2>
+        <div class="form-group ltr">
+            <label>توضیحات انگلیسی</label>
+            <textarea id="englishTextArea" rows="5" readonly></textarea>
+        </div>
+        <div class="form-group">
+            <label>توضیحات عربی</label>
+            <textarea id="arabicTextArea" rows="5" readonly></textarea>
+        </div>
+    </section>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
