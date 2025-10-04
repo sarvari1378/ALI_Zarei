@@ -5,50 +5,47 @@ on:
     branches:
       - main
     paths:
-      - 'data/**' # فقط زمانی اجرا شود که فایلی در پوشه data تغییر کند
+      - 'Data/**' # من این را به Data با حرف بزرگ تغییر دادم تا با لاگ شما مطابقت داشته باشد
   workflow_dispatch:
 
 jobs:
   combine-json:
     runs-on: ubuntu-latest
 
+    # VVVVVV این بخش را اضافه کنید VVVVVV
+    permissions:
+      contents: write
+    # ^^^^^^ این بخش را اضافه کنید ^^^^^^
+
     steps:
       # 1. دانلود کد ریپازیتوری
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. نصب jq (ابزار پردازش JSON)
-      # معمولاً از قبل نصب است، اما برای اطمینان این مرحله را قرار می‌دهیم
+      # 2. نصب jq
       - name: Install jq
         run: sudo apt-get update && sudo apt-get install -y jq
 
       # 3. اجرای اسکریپت برای ترکیب فایل‌های JSON
       - name: Combine JSON files for each sub-directory
         run: |
-          # ابتدا چک می‌کنیم که پوشه data اصلا وجود دارد یا نه
-          if [ ! -d "Data" ]; then
-            echo "Directory 'data' not found. Exiting."
+          # مطمئن شوید که نام پوشه با حروف بزرگ و کوچک درست است
+          # در لاگ شما 'Data' است، پس من از آن استفاده می‌کنم
+          BASE_DIR="Data"
+          if [ ! -d "$BASE_DIR" ]; then
+            echo "Directory '$BASE_DIR' not found. Exiting."
             exit 0
           fi
-
-          echo "Processing sub-directories in 'data'..."
           
-          # حلقه روی تمام زیرپوشه‌های داخل data
-          for dir in Data/*/; do
-            # چک می‌کنیم که آیا آیتم پیدا شده واقعا یک پوشه است
+          echo "Processing sub-directories in '$BASE_DIR'..."
+          
+          for dir in "$BASE_DIR"/*/; do
             if [ -d "$dir" ]; then
-              # استخراج نام پوشه (مثلاً از 'data/users/' به 'users')
               subfolder_name=$(basename "$dir")
               echo "Processing sub-directory: $subfolder_name"
+              output_file="$BASE_DIR/$subfolder_name.json"
               
-              # مسیر فایل خروجی (مثلاً 'data/users.json')
-              output_file="Data/$subfolder_name.json"
-              
-              # چک می‌کنیم که آیا فایل json در این پوشه وجود دارد یا نه
               if ls "${dir}"*.json 1> /dev/null 2>&1; then
-                # جادوی اصلی با jq
-                # -s (slurp mode): تمام فایل‌های ورودی را می‌خواند و در یک آرایه قرار می‌دهد
-                # '.' : فیلتر اصلی که کل آرایه را برمی‌گرداند
                 jq -s '.' "${dir}"*.json > "$output_file"
                 echo "Successfully created $output_file"
               else
@@ -59,14 +56,13 @@ jobs:
           
           echo "JSON combination process finished."
 
-      # 4. کامیت کردن فایل‌های جدید به ریپازیتوری
-      # این اکشن تغییرات را به صورت خودکار کامیت می‌کند
+      # 4. کامیت کردن فایل‌های جدید
       - name: Commit generated JSON files
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "ci: auto-combine JSON files"
-          # فقط فایل‌های .json که مستقیماً داخل data هستند را کامیت کن
-          file_pattern: "Data/*.json"
+          # مطمئن شوید که این مسیر با اسکریپت بالا مطابقت دارد
+          file_pattern: "Data/*.json" 
           commit_user_name: "GitHub Actions"
           commit_user_email: "actions@github.com"
           commit_author: "GitHub Actions <actions@github.com>"
