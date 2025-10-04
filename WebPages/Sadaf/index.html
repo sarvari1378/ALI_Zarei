@@ -1,0 +1,147 @@
+<!-- index.html (نسخه کامل و نهایی با اطلاعات فایل اول) -->
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>طراحی شناسنامه انگشتر</title>
+  <script src="https://cdn.jsdelivr.net/npm/piexifjs@1.0.4/piexif.min.js"></script>
+  <link rel="stylesheet" href="css/style.css" />
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+  <!-- Container برای نوتیفیکیشن‌های Toast -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- دکمه همبرگری برای باز کردن منو -->
+  <button id="hamburgerBtn" class="hamburger-btn">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <!-- بخش loadingOverlay -->
+  <div id="loadingOverlay">
+    <div class="spinner"></div>
+    <p id="loadingStatus">در حال شروع عملیات...</p>
+    <div class="progress-details">
+      <div id="jsonProgress" class="progress-item">
+        <span class="status-icon"></span>
+        <span>آپلود اطلاعات (JSON)</span>
+      </div>
+      <div id="imageProgress" class="progress-item">
+        <span class="status-icon"></span>
+        <span>آپلود تصویر محصول</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="previewContainer" class="preview-container">
+    <div class="canvas-wrapper">
+      <canvas id="canvas"></canvas>
+    </div>
+  </div>
+
+  <button id="togglePreviewBtn" class="toggle-preview-btn">مخفی کردن</button>
+
+  <div class="page-container">
+    <div class="controls-accordion">
+      <!-- مرحله ۱: تصاویر -->
+      <details class="accordion-item" open>
+        <summary class="accordion-header">مرحله ۱: انتخاب تصاویر</summary>
+        <div class="accordion-body">
+          <div class="form-group">
+            <label for="circleImageInput">تصویر انگشتر</label>
+            <input type="file" id="circleImageInput" accept="image/*" data-x="1730" data-y="40" data-width="880" data-height="880" data-Roundness="90"/>
+          </div>
+          <div class="form-group">
+            <label for="ringImageInput">تصویر QR Code (اختیاری)</label>
+            <input type="text" id="ringImageInput" placeholder="آدرس QR Code به صورت خودکار ساخته می‌شود" data-x="280" data-y="1160" data-width="500" data-height="500" data-mode="darken" />
+          </div>
+        </div>
+      </details>
+
+      <!-- مرحله ۲: تنظیمات تصویر -->
+      <details class="accordion-item">
+        <summary class="accordion-header">مرحله ۲: تنظیمات تصویر</summary>
+        <div class="accordion-body">
+          <div class="slider-group"><label for="slider">میزان بزرگنمایی</label><input type="range" id="slider" min="0" max="5" step="0.01" value="2"></div>
+          <div class="slider-group"><label for="sliderx">حرکت افقی (چپ/راست)</label><input type="range" id="sliderx" min="-700" max="700" step="0.01" value="0.5"></div>
+          <div class="slider-group"><label for="slidery">حرکت عمودی (بالا/پایین)</label><input type="range" id="slidery" min="-700" max="700" step="0.01" value="0.5"></div>
+        </div>
+      </details>
+      
+      <!-- مرحله ۳: اطلاعات عربی (کامل شده) -->
+      <details class="accordion-item">
+        <summary class="accordion-header">مرحله ۳: اطلاعات شناسنامه (عربی)</summary>
+        <div class="accordion-body">
+          <div class="form-group"><input type="text" id="number8" placeholder="اسم دواسه" data-align="right" data-x="2800" data-y="1225" data-font="ArabicFont" data-x2="873" data-y2="482" dir="rtl" value="اسم دواسه:"></div>
+          <div class="form-group"><input type="text" id="number9" placeholder="نوع صیاغه" data-align="right" data-x="2800" data-y="1305" data-font="ArabicFont" data-x2="873" data-y2="501" dir="rtl" value="نوع صیاغه: یدوی عباسی R"></div>
+          <div class="form-group"><input type="text" id="number10" placeholder="عیار الفضه" data-align="right" data-x="2800" data-y="1385" data-font="ArabicFont" data-x2="875" data-y2="530" dir="rtl" value="عیار الفضه: 925"></div>
+          <div class="form-group"><input type="text" id="number11" placeholder="خاتم التوقیع" data-align="right" data-x="2800" data-y="1465" data-font="ArabicFont" data-x2="875" data-y2="562" dir="rtl" value="خاتم التوقیع:"></div>
+          <div class="form-group"><input type="text" id="number12" placeholder="عدد الماس" data-align="right" data-x="2800" data-y="1545" data-font="ArabicFont" data-x2="875" data-y2="568" dir="rtl" value="عدد الماس:"></div>
+          <div class="form-group"><input type="text" id="number19" placeholder="الوزن" data-align="right" data-x="2800" data-y="1625" data-font="ArabicFont" data-x2="917" data-y2="591" dir="rtl" value="الوزن:"></div>
+        </div>
+      </details>
+      
+      <!-- مرحله ۴: اطلاعات انگلیسی (کامل شده) -->
+      <details class="accordion-item">
+        <summary class="accordion-header">مرحله ۴: اطلاعات شناسنامه (انگلیسی)</summary>
+        <div class="accordion-body ltr">
+          <div class="form-group"><input type="text" id="number1" placeholder="Pedal Name" data-align="left" data-x="1030" data-y="1225" data-font="EnglishFont" data-x2="500" data-y2="475" value="Pedal Name: "></div>
+          <div class="form-group"><input type="text" id="number2" placeholder="Build Type" data-align="left" data-x="1030" data-y="1305" data-font="EnglishFont" data-x2="516" data-y2="506" value="Build Type: Hand made"></div>
+          <div class="form-group"><input type="text" id="number3" placeholder="Percentage of silver" data-align="left" data-x="1030" data-y="1385" data-font="EnglishFont" data-x2="606" data-y2="535" value="Percentage of silver: 925"></div>
+          <div class="form-group"><input type="text" id="number4" placeholder="Type of stone" data-align="left" data-x="1030" data-y="1465" data-font="EnglishFont" data-x2="548" data-y2="565" value="Type of stone:"></div>
+          <div class="form-group"><input type="text" id="number5" placeholder="Number of Diamond" data-align="left" data-x="1030" data-y="1545" data-font="EnglishFont" data-x2="548" data-y2="565" value="Number of Diamond:"></div>
+          <div class="form-group"><input type="text" id="number6" placeholder="Weight" data-align="left" data-x="1030" data-y="1625" data-font="EnglishFont" data-x2="490" data-y2="594" value="Weight:"></div>
+        </div>
+      </details>
+      
+      <!-- مرحله ۵: کد نهایی -->
+      <details class="accordion-item">
+        <summary class="accordion-header">مرحله ۵: کد نهایی و دانلود</summary>
+        <div class="accordion-body">
+            <div class="form-group">
+                <label for="number13">کد اصلی محصول</label>
+                <input type="text" id="number13" placeholder="مثال: A.R" data-align="center" data-x="2185" data-y="1000" data-font="EnglishFont" data-fontsize="110" data-color="#000000" value="">
+            </div>
+            <div class="final-actions">
+                <button id="submitBtn" class="btn btn-primary">دانلود و ارسال</button>
+                <button id="downloadOnlyBtn" class="btn btn-secondary">دانلود فقط طرح</button>
+            </div>
+        </div>
+      </details>
+    </div>
+
+    <!-- بخش نمایش توضیحات ترکیبی -->
+    <section class="card description-preview" hidden>
+        <h2>پیش‌نمایش توضیحات</h2>
+        <div class="form-group ltr">
+            <label>توضیحات انگلیسی</label>
+            <textarea id="englishTextArea" rows="5" readonly></textarea>
+        </div>
+        <div class="form-group">
+            <label>توضیحات عربی</label>
+            <textarea id="arabicTextArea" rows="5" readonly></textarea>
+        </div>
+    </section>
+  </div>
+
+  <!-- منوی کناری (Sidebar) برای صف آپلود -->
+  <div id="uploadQueueSidebar" class="upload-queue-sidebar">
+    <div class="sidebar-header">
+      <h3>صف آپلود</h3>
+      <button id="closeSidebarBtn" class="close-sidebar-btn">&times;</button>
+    </div>
+    <ul id="uploadQueueList" class="sidebar-body">
+      <li class="empty-message">هیچ آپلودی در صف نیست.</li>
+    </ul>
+  </div>
+  
+  <!-- یک لایه تیره برای پشت منو -->
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
