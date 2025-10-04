@@ -26,7 +26,7 @@ jobs:
       - name: Combine JSON files for each sub-directory
         run: |
           # ابتدا چک می‌کنیم که پوشه data اصلا وجود دارد یا نه
-          if [ ! -d "data" ]; then
+          if [ ! -d "Data" ]; then
             echo "Directory 'data' not found. Exiting."
             exit 0
           fi
@@ -34,7 +34,7 @@ jobs:
           echo "Processing sub-directories in 'data'..."
           
           # حلقه روی تمام زیرپوشه‌های داخل data
-          for dir in data/*/; do
+          for dir in Data/*/; do
             # چک می‌کنیم که آیا آیتم پیدا شده واقعا یک پوشه است
             if [ -d "$dir" ]; then
               # استخراج نام پوشه (مثلاً از 'data/users/' به 'users')
@@ -42,7 +42,7 @@ jobs:
               echo "Processing sub-directory: $subfolder_name"
               
               # مسیر فایل خروجی (مثلاً 'data/users.json')
-              output_file="data/$subfolder_name.json"
+              output_file="Data/$subfolder_name.json"
               
               # چک می‌کنیم که آیا فایل json در این پوشه وجود دارد یا نه
               if ls "${dir}"*.json 1> /dev/null 2>&1; then
@@ -66,7 +66,7 @@ jobs:
         with:
           commit_message: "ci: auto-combine JSON files"
           # فقط فایل‌های .json که مستقیماً داخل data هستند را کامیت کن
-          file_pattern: "data/*.json"
+          file_pattern: "Data/*.json"
           commit_user_name: "GitHub Actions"
           commit_user_email: "actions@github.com"
           commit_author: "GitHub Actions <actions@github.com>"
