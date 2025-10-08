@@ -65,7 +65,7 @@ function updateTextAreas() {
 function handleCodeInputChange() {
     const codeValue = extractCode(this.value);
     const ringImageInput = document.getElementById("ringImageInput");
-    ringImageInput.value = codeValue ? `https://secondones.abba30r.workers.dev/${codeValue}` : "";
+    ringImageInput.value = codeValue ? `https://secondone.mhadijarah.workers.dev/${codeValue}` : "";
     ringImageInput.dispatchEvent(new Event("change"));
 }
 
