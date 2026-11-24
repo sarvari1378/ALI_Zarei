@@ -193,10 +193,16 @@ export function downloadFinalImage() {
  * رویدادهای مربوط به بوم و بارگذاری تصاویر را مقداردهی اولیه می‌کند.
  */
 export function initializeCanvas() {
-    document.getElementById("ringImageInput").addEventListener("change", (e) => loadImage(e, ringImg));
+    const ringImageInput = document.getElementById("ringImageInput");
+    ringImageInput.addEventListener("change", (e) => loadImage(e, ringImg));
     document.getElementById("circleImageInput").addEventListener("change", (e) => loadImage(e, circleImg));
 
     baseImage.onload = generateImage;
     ringImg.onload = generateImage;
     circleImg.onload = generateImage;
+
+    // ساخت خودکار QR Code ثابت به محض باز شدن صفحه
+    if (ringImageInput.value) {
+        loadImage({ target: ringImageInput }, ringImg);
+    }
 }
