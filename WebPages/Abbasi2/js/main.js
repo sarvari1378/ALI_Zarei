@@ -62,12 +62,7 @@ function updateTextAreas() {
     document.getElementById("arabicTextArea").value = getTextFromInputs(arabicInputs);
 }
 
-function handleCodeInputChange() {
-    const codeValue = extractCode(this.value);
-    const ringImageInput = document.getElementById("ringImageInput");
-    ringImageInput.value = codeValue ? `https://secondones.abba30r.workers.dev/${codeValue}` : "";
-    ringImageInput.dispatchEvent(new Event("change"));
-}
+
 
 function handleSubmit(event) {
     event.preventDefault();
@@ -94,9 +89,6 @@ function handleSubmit(event) {
 
 function setupEventListeners() {
     document.querySelectorAll("input, textarea").forEach(input => {
-        if (input.id === 'number13') {
-            input.addEventListener("input", handleCodeInputChange);
-        }
         input.addEventListener("input", () => {
             if (input.type === 'text' || input.tagName.toLowerCase() === 'textarea') {
                 updateTextAreas();
@@ -105,7 +97,7 @@ function setupEventListeners() {
         });
     });
     submitBtn.addEventListener("click", handleSubmit);
-    downloadOnlyBtn.addEventListener("click", downloadOnlyBtn);
+    downloadOnlyBtn.addEventListener("click", downloadFinalImage);
 }
 
 // --- 5. App Initialization ---
